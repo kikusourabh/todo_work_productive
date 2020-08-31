@@ -48,6 +48,7 @@ function Home() {
   return (
     <SafeAreaView style={{flex: 1}}>
       <SectionList
+        style={{paddingStart: 16, paddingEnd: 16}}
         sections={task}
         renderItem={TaskItem}
         renderSectionHeader={TaskItemHeader}
