@@ -3,4 +3,5 @@ export const Colors = {
   SecondaryText: '#52575d',
   white: '#ffffff',
   accent: '#056674',
+  black: '#000000',
 };
