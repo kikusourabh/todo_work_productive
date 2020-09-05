@@ -1,13 +1,16 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../config/Colors';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 function FloatingActionButton({onPress, style}) {
   return (
     <View style={styles.container}>
-      <View style={[styles.floatingButton, style]}>
-        <Text>FloatingActionButton</Text>
-      </View>
+      <TouchableOpacity onPress={onPress}>
+        <View style={[styles.floatingButton, style]}>
+          <Icon name="add" size={30} color={Colors.white} />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -35,5 +38,7 @@ const styles = StyleSheet.create({
     elevation: 24,
     backgroundColor: Colors.accent,
     borderRadius: 56 / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
