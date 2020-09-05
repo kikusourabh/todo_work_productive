@@ -4,15 +4,27 @@ import {View, Text, SafeAreaView, SectionList} from 'react-native';
 //components
 import {TaskItem} from '../components/TaskItem';
 import {TaskItemHeader} from '../components/TaskItemHeader';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {Styles} from '../config/Styles';
 import FloatingActionButton from '../components/FloatingActionButton';
+import {addTask} from '../store/Actions/TaskAction';
 
 function Home() {
   const inCompleteTasks = useSelector(
     (state) => state.tasksController.incomeplete_task,
   );
-  const addTask = () => {};
+  const dispatch = useDispatch();
+  const add_Task = () => {
+    dispatch(
+      addTask({
+        id: 'task-1',
+        task_title: 'learn about git and github',
+        task_description:
+          'learnig about git basic commands, branches, merging, conflicts',
+        task_status: false,
+      }),
+    );
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
       <View>
@@ -29,7 +41,7 @@ function Home() {
         renderItem={TaskItem}
         renderSectionHeader={TaskItemHeader}
       /> */}
-      <FloatingActionButton onPress={addTask} />
+      <FloatingActionButton onPress={add_Task} />
     </SafeAreaView>
   );
 }
