@@ -4,55 +4,32 @@ import {View, Text, SafeAreaView, SectionList} from 'react-native';
 //components
 import {TaskItem} from '../components/TaskItem';
 import {TaskItemHeader} from '../components/TaskItemHeader';
+import {useSelector} from 'react-redux';
+import {Styles} from '../config/Styles';
+import FloatingActionButton from '../components/FloatingActionButton';
 
 function Home() {
-  const [task, setTask] = useState([
-    {
-      key: 'InCompletTask',
-      title: 'Todo Task',
-      data: [
-        {
-          id: 'task-1',
-          task_title: 'learn react-native basics',
-          task_description:
-            'learn and implement diffrent small example to create react native basic apps',
-        },
-        {
-          id: 'task-3',
-          task_title: 'learn react-native basics',
-          task_description:
-            'learn and implement diffrent small example to create react native basic apps',
-        },
-      ],
-    },
-    {
-      key: 'CompletedTask',
-      title: 'Completed Task',
-      data: [
-        {
-          id: 'task-2',
-          task_title: 'learn react-native basics',
-          task_description:
-            'learn and implement diffrent small example to create react native basic apps',
-        },
-        {
-          id: 'task-4',
-          task_title: 'learn react-native basics',
-          task_description:
-            'learn and implement diffrent small example to create react native basic apps',
-        },
-      ],
-    },
-  ]);
-
+  const inCompleteTasks = useSelector(
+    (state) => state.tasksController.incomeplete_task,
+  );
+  const addTask = () => {};
   return (
     <SafeAreaView style={{flex: 1}}>
-      <SectionList
+      <View>
+        <Text style={Styles.HeaderText}>Task todo</Text>
+      </View>
+      {inCompleteTasks.length > 0 ? (
+        <Text>Task incomplete : {inCompleteTasks.length} </Text>
+      ) : (
+        <Text>You don't have any task to do</Text>
+      )}
+      {/* <SectionList
         style={{paddingStart: 16, paddingEnd: 16}}
         sections={task}
         renderItem={TaskItem}
         renderSectionHeader={TaskItemHeader}
-      />
+      /> */}
+      <FloatingActionButton onPress={addTask} />
     </SafeAreaView>
   );
 }
