@@ -197,12 +197,7 @@ function Home() {
         renderItem={TaskItem}
         keyExtractor={(item) => item.id}
       />
-      {/* <SectionList
-        style={{paddingStart: 16, paddingEnd: 16}}
-        sections={task}
-        renderItem={TaskItem}
-        renderSectionHeader={TaskItemHeader}
-      /> */}
+
       <FloatingActionButton onPress={OpenModal} />
     </SafeAreaView>
   );
