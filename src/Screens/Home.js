@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   TextInput,
+  FlatList,
 } from 'react-native';
 
 //components
@@ -21,28 +22,79 @@ import {Colors} from '../config/Colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 function Home() {
+  const [Task, setTask] = useState({
+    title: 'null',
+    description: 'null',
+  });
   const [modelVisibility, setModelVisibility] = useState(false);
 
   const inCompleteTasks = useSelector(
     (state) => state.tasksController.incomeplete_task,
   );
   const dispatch = useDispatch();
-  const add_Task = () => {
-    // dispatch(
-    //   addTask({
-    //     id: 'task-1',
-    //     task_title: 'learn about git and github',
-    //     task_description:
-    //       'learnig about git basic commands, branches, merging, conflicts',
-    //     task_status: false,
-    //   }),
-    // );
+  const add_Task = (task) => {
+    setModelVisibility(false);
+    dispatch(addTask(task));
+    setTask({
+      title: 'null',
+      description: 'null',
+    });
+  };
 
+  const OpenModal = () => {
     setModelVisibility(true);
   };
+  const checkTask = () => {
+    if (
+      Task.title != null &&
+      Task.title != 'null' &&
+      Task.description != null &&
+      Task.description != 'null'
+    ) {
+      add_Task({
+        id: 'task-' + Math.random(),
+        task_title: Task.title,
+        task_description: Task.description,
+        task_status: false,
+      });
+    } else {
+      console.log('====================================');
+      console.log('wrong details entered');
+      console.log('====================================');
+    }
+  };
+
+  const checkTaskTitle = (title) => {
+    if (/^.{4,15}.$/.test(title)) {
+      setTask({
+        ...Task,
+        title: title,
+      });
+    } else {
+      setTask({
+        ...Task,
+        title: null,
+      });
+    }
+  };
+  const checkTaskDiscription = (description) => {
+    if (/^.{4,60}.$/.test(description)) {
+      setTask({
+        ...Task,
+        description: description,
+      });
+    } else {
+      setTask({
+        ...Task,
+        description: null,
+      });
+    }
+  };
+
   const onClose = () => {
     setModelVisibility(false);
   };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       {/* modal */}
@@ -60,9 +112,11 @@ function Home() {
                   style={[styles.headerInput, {paddingStart: 8}]}
                   placeholder="Title"
                   color={Colors.white}
+                  onChangeText={(e) => checkTaskTitle(e)}
                   placeholderTextColor={Colors.white}
                 />
               </View>
+
               <View style={{flex: 1}}>
                 <TouchableOpacity onPress={onClose}>
                   <Icon
@@ -74,22 +128,53 @@ function Home() {
                 </TouchableOpacity>
               </View>
             </View>
-
+            {Task.title == null ? (
+              <View
+                style={{
+                  marginStart: 16,
+                  marginEnd: 16,
+                  backgroundColor: Colors.white,
+                  borderRadius: 10,
+                  padding: 8,
+                }}>
+                <Text
+                  style={{
+                    color: Colors.error,
+                  }}>
+                  Title must be minimum 4 and maximum 15 character
+                </Text>
+              </View>
+            ) : null}
             <View style={styles.cardBody}>
               <TextInput
                 multiline
-                style={[
-                  styles.headerInput,
-                  {width: '100%', fontSize: 16, margin: 4},
-                ]}
+                style={[styles.headerInput, {width: '100%', fontSize: 16}]}
                 numberOfLines={4}
                 placeholder="Discription"
                 color={Colors.white}
+                onChangeText={(e) => checkTaskDiscription(e)}
                 placeholderTextColor={Colors.white}
               />
             </View>
-
-            <TouchableOpacity>
+            {Task.description == null ? (
+              <View
+                style={{
+                  marginStart: 16,
+                  marginEnd: 16,
+                  backgroundColor: Colors.white,
+                  borderRadius: 10,
+                  marginTop: 8,
+                  padding: 8,
+                }}>
+                <Text
+                  style={{
+                    color: Colors.error,
+                  }}>
+                  Discription must be minimum 4 and maximum 60 character
+                </Text>
+              </View>
+            ) : null}
+            <TouchableOpacity onPress={checkTask}>
               <View style={styles.button}>
                 <Text style={styles.buttonText}>Add</Text>
               </View>
@@ -107,13 +192,18 @@ function Home() {
       ) : (
         <Text>You don't have any task to do</Text>
       )}
+      <FlatList
+        data={inCompleteTasks}
+        renderItem={TaskItem}
+        keyExtractor={(item) => item.id}
+      />
       {/* <SectionList
         style={{paddingStart: 16, paddingEnd: 16}}
         sections={task}
         renderItem={TaskItem}
         renderSectionHeader={TaskItemHeader}
       /> */}
-      <FloatingActionButton onPress={add_Task} />
+      <FloatingActionButton onPress={OpenModal} />
     </SafeAreaView>
   );
 }
@@ -152,6 +242,7 @@ const styles = StyleSheet.create({
     marginStart: 16,
     marginEnd: 16,
     borderRadius: 10,
+    padding: 8,
     borderColor: Colors.white,
     borderStyle: 'dashed',
   },

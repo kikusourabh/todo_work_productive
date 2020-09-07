@@ -4,4 +4,5 @@ export const Colors = {
   white: '#ffffff',
   accent: '#056674',
   black: '#000000',
+  error: '#ff4b5c',
 };
