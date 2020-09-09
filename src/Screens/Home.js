@@ -6,18 +6,16 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   TextInput,
   FlatList,
 } from 'react-native';
 
 //components
-import {TaskItem} from '../components/TaskItem';
-import {TaskItemHeader} from '../components/TaskItemHeader';
+import TaskItem from '../components/TaskItem';
 import {useSelector, useDispatch} from 'react-redux';
 import {Styles} from '../config/Styles';
 import FloatingActionButton from '../components/FloatingActionButton';
-import {addTask} from '../store/Actions/TaskAction';
+import {addTask, completeTask} from '../store/Actions/TaskAction';
 import {Colors} from '../config/Colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -28,10 +26,14 @@ function Home() {
   });
   const [modelVisibility, setModelVisibility] = useState(false);
 
-  const inCompleteTasks = useSelector(
-    (state) => state.tasksController.incomeplete_task,
-  );
+  const Tasks = useSelector((state) => state.tasksController.Tasks);
+
+  const inCompleteTasks = Tasks.filter((val) => val.task_status == false);
+
+  const completeTasks = Tasks.filter((val) => val.task_status == true);
+
   const dispatch = useDispatch();
+
   const add_Task = (task) => {
     setModelVisibility(false);
     dispatch(addTask(task));
@@ -51,8 +53,11 @@ function Home() {
       Task.description != null &&
       Task.description != 'null'
     ) {
+      const id = create_UUID();
+      console.log('id : ' + id);
+
       add_Task({
-        id: 'task-' + Math.random(),
+        id: id,
         task_title: Task.title,
         task_description: Task.description,
         task_status: false,
@@ -64,8 +69,21 @@ function Home() {
     }
   };
 
+  const create_UUID = () => {
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (dt + Math.random() * 16) % 16 | 0;
+        dt = Math.floor(dt / 16);
+        return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      },
+    );
+    return uuid;
+  };
+
   const checkTaskTitle = (title) => {
-    if (/^.{4,15}.$/.test(title)) {
+    if (/^.{4,30}.$/.test(title)) {
       setTask({
         ...Task,
         title: title,
@@ -78,7 +96,7 @@ function Home() {
     }
   };
   const checkTaskDiscription = (description) => {
-    if (/^.{4,60}.$/.test(description)) {
+    if (/^.{4,120}.$/.test(description)) {
       setTask({
         ...Task,
         description: description,
@@ -95,6 +113,8 @@ function Home() {
     setModelVisibility(false);
   };
 
+  const renderItem = ({item}) => <TaskItem item={item} />;
+
   return (
     <SafeAreaView style={{flex: 1}}>
       {/* modal */}
@@ -102,8 +122,13 @@ function Home() {
         <View style={styles.parentView}>
           <View style={styles.modalCard}>
             <View style={styles.cardHeader}>
-              <View style={{flex: 10, flexDirection: 'row'}}>
+              <View
+                style={{
+                  flex: 10,
+                  flexDirection: 'row',
+                }}>
                 <Icon
+                  style={{justifyContent: 'center', alignSelf: 'center'}}
                   name="add-circle-outline"
                   size={24}
                   color={Colors.white}
@@ -141,7 +166,7 @@ function Home() {
                   style={{
                     color: Colors.error,
                   }}>
-                  Title must be minimum 4 and maximum 15 character
+                  Title must be minimum 4 and maximum 30 character
                 </Text>
               </View>
             ) : null}
@@ -170,7 +195,7 @@ function Home() {
                   style={{
                     color: Colors.error,
                   }}>
-                  Discription must be minimum 4 and maximum 60 character
+                  Discription must be minimum 4 and maximum 120 character
                 </Text>
               </View>
             ) : null}
@@ -184,21 +209,42 @@ function Home() {
       </Modal>
       {/* modal */}
 
-      <View>
-        <Text style={Styles.HeaderText}>Task todo</Text>
-      </View>
-      {inCompleteTasks.length > 0 ? (
-        <Text>Task incomplete : {inCompleteTasks.length} </Text>
-      ) : (
-        <Text>You don't have any task to do</Text>
-      )}
-      <FlatList
-        data={inCompleteTasks}
-        renderItem={TaskItem}
-        keyExtractor={(item) => item.id}
-      />
+      <View style={{flex: 1, padding: 16}}>
+        {/* incomplete */}
+        <View>
+          <Text style={Styles.HeaderText}>Todo</Text>
+        </View>
+        {inCompleteTasks.length > 0 ? (
+          <View>
+            <Text>Task incomplete : {inCompleteTasks.length} </Text>
+          </View>
+        ) : (
+          <Text>You don't have any task to do</Text>
+        )}
+        <FlatList
+          data={inCompleteTasks}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+        {/* incomplete */}
 
-      <FloatingActionButton onPress={OpenModal} />
+        {/* complete */}
+        <View>
+          <Text style={Styles.HeaderText}>Complete</Text>
+        </View>
+        {completeTasks.length > 0 ? (
+          <Text>Task complete : {completeTasks.length} </Text>
+        ) : (
+          <Text>You don't have any completed task</Text>
+        )}
+        <FlatList
+          data={completeTasks}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+        {/* complete */}
+        <FloatingActionButton onPress={OpenModal} />
+      </View>
     </SafeAreaView>
   );
 }

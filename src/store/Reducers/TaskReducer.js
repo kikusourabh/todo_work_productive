@@ -7,8 +7,7 @@ import {
 } from '../Types/TaskType';
 
 const initialstate = {
-  incomeplete_task: [],
-  complete_task: [],
+  Tasks: [],
 };
 
 const TaskReducer = (state = initialstate, action) => {
@@ -16,17 +15,36 @@ const TaskReducer = (state = initialstate, action) => {
     case ADD_TASK:
       return {
         ...state,
-        incomeplete_task: state?.incomeplete_task?.concat(action.task),
+        Tasks: state?.Tasks?.concat(action.task),
       };
 
     case DELETE_TASK:
       return {
-        incomeplete_task: state?.incomeplete_task?.filter(
-          (val) => val.id != action.task_id,
-        ),
-        complete_task: state?.complete_task?.filter(
-          (val) => val.id != action.task_id,
-        ),
+        ...state,
+        Tasks: state?.Tasks?.filter((val) => val.id != action.task_id),
+      };
+
+    case COMPLETE_TASK:
+      return {
+        Tasks: state?.Tasks?.map((item) => {
+          if (item.id == action.task_id) {
+            item.task_status = true;
+          } else {
+            item.task_status = false;
+          }
+          return item;
+        }),
+      };
+    case IN_COMPLETE_TASK:
+      return {
+        Tasks: state?.Tasks?.map((item) => {
+          if (item.id == action.task_id) {
+            item.task_status = false;
+          } else {
+            item.task_status = true;
+          }
+          return item;
+        }),
       };
 
     default:
