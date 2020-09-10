@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Styles} from '../config/Styles';
-import CheckBox from '@react-native-community/checkbox';
 import {useDispatch} from 'react-redux';
 import {
   completeTask,
@@ -10,6 +9,7 @@ import {
 } from '../store/Actions/TaskAction';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Colors} from '../config/Colors';
+import CheckBox from './CheckBox';
 
 export default function TaskItem({item}) {
   const dispatch = useDispatch();
@@ -35,11 +35,15 @@ export default function TaskItem({item}) {
         marginTop: 4,
       }}>
       <View style={{flex: 1, justifyContent: 'center'}}>
-        <CheckBox
+        {/* <CheckBox
           disabled={false}
           value={item.task_status}
           style={styles.checkBoxStyle}
           onValueChange={(newValue) => setTaskState(newValue)}
+        /> */}
+        <CheckBox
+          value={item.task_status}
+          onValueChange={(isCheck) => setTaskState(isCheck)}
         />
       </View>
       <View style={{flex: 10}}>

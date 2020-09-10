@@ -26,25 +26,15 @@ const TaskReducer = (state = initialstate, action) => {
 
     case COMPLETE_TASK:
       return {
-        Tasks: state?.Tasks?.map((item) => {
-          if (item.id == action.task_id) {
-            item.task_status = true;
-          } else {
-            item.task_status = false;
-          }
-          return item;
-        }),
+        Tasks: state.Tasks.map((item) =>
+          item.id === action.task_id ? {...item, task_status: true} : item,
+        ),
       };
     case IN_COMPLETE_TASK:
       return {
-        Tasks: state?.Tasks?.map((item) => {
-          if (item.id == action.task_id) {
-            item.task_status = false;
-          } else {
-            item.task_status = true;
-          }
-          return item;
-        }),
+        Tasks: state.Tasks.map((item) =>
+          item.id === action.task_id ? {...item, task_status: false} : item,
+        ),
       };
 
     default:
