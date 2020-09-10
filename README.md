@@ -1,3 +1,3 @@
 # todo app screenshot
 
-![todo-app](./screenshot/todo_app.png)
+![todo-app](./Screenshot/todo_app.png)
