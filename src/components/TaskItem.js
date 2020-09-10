@@ -35,12 +35,6 @@ export default function TaskItem({item}) {
         marginTop: 4,
       }}>
       <View style={{flex: 1, justifyContent: 'center'}}>
-        {/* <CheckBox
-          disabled={false}
-          value={item.task_status}
-          style={styles.checkBoxStyle}
-          onValueChange={(newValue) => setTaskState(newValue)}
-        /> */}
         <CheckBox
           value={item.task_status}
           onValueChange={(isCheck) => setTaskState(isCheck)}
@@ -58,7 +52,3 @@ export default function TaskItem({item}) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  checkBoxStyle: {height: 25, width: 25},
-});
